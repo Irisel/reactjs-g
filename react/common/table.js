@@ -1,12 +1,13 @@
-var React = require('react');
-var Input = require('../single/input');
+import React from '/usr/local/lib/node_modules/react';
+import Input from '../single/input';
 
-var ReactRouter = require('../lib/react-router') ;
-var StateMixin = ReactRouter.State;
-var cx = require('/root/reactjs/webpack/node_modules/classnames') ;
+const ReactRouter = require('/usr/local/lib/node_modules/react-router') ;
+const StateMixin = ReactRouter.State;
+import cx from '/root/reactjs/webpack/node_modules/classnames';
 
+import $ from '../lib/jquery';
 
-var table = {
+const table = {
     thead: [{
         text: '名称'
     },{
@@ -29,15 +30,33 @@ var table = {
         {
             text: ''
         }]
+    },
+    {
+        tds: [{
+            text: 'pass'
+        },
+        {
+            text: '运行中'
+        },
+        {
+            text: '-'
+        },
+        {
+            text: ''
+        }]
     }]
 };
 
-var Table = React.createClass({
+const Table = React.createClass({
     mixins: [StateMixin],
     getInitialState: function(){
         return {
             table: this.props.table || table
         }
+    },
+    componentDidMount: function(){
+        var node = $(this.getDOMNode()), data = node.data();
+        if(data)console.log(data.table, node.attr('class'));
     },
     render: function () {
       var th = '', tr='';
@@ -60,7 +79,7 @@ var Table = React.createClass({
         'table-bordered': true
       });
       return (
-        <div className="table-common">
+        <div className="table-common" data-table="table">
             <table className="table-bordered">
                 <thead>
                     <tr>

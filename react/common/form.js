@@ -1,11 +1,14 @@
-var React = require('react');
-var Input = require('../single/input');
-var Jser = require('../Jser');
+import React from '/usr/local/lib/node_modules/react';
+import ReactDOM from '/usr/local/lib/node_modules/react-dom';
+import Input from '../single/input';
+import Jser from '../Jser';
+import { connect } from '/usr/local/lib/node_modules/react-redux';
+import * as action from './actions'
 
-var ReactRouter = require('../lib/react-router') ;
-var StateMixin = ReactRouter.State;
+const ReactRouter = require('/usr/local/lib/node_modules/react-router') ;
+const StateMixin = ReactRouter.State;
 
-var form = [
+const form = [
     {
         value: '123',
         validate: /^[0-9]+$/,
@@ -26,7 +29,7 @@ var form = [
     }
 ];
 
-var Form = React.createClass({
+const Form = React.createClass({
     mixins: [StateMixin],
     getInitialState: function() {
       return {form: form || [], data: {}};
@@ -43,6 +46,7 @@ var Form = React.createClass({
 //        }.bind(this));
     },
     submit:function(){
+
         Jser.ajax('post', null, 'www.baidu.com', this.state.data, {
                 success: function(){
                     this.setState({form: []});
@@ -63,21 +67,30 @@ var Form = React.createClass({
         });
         this.setState({form: this.state.form});
     },
+    changeHandle: function(){
+	    const node = ReactDOM.findDOMNode(this.refs.input);
+	    const value = node.value.trim();
+	    this.props.change(value);
+  	},
     render: function () {
         var handleItemClick = this.handleItemClick;
         var rows = this.state.form.map(function (item,index) {
           return (
-            <Input value={ item.value} validate={ item.validate} name={ item.name } invalid_info={ item.invalid_info} onChange={ handleItemClick.bind(this,item,index)}/>
+            <Input key={index} value={ item.value} validate={ item.validate} name={ item.name } invalid_info={ item.invalid_info} onChange={ handleItemClick.bind(this,item,index)}/>
           );
         });
       return (
         <div className="modal-form">
             <div className="modal-header">
-                <h4>{ this.getParams().id}</h4>
+                <h4>{ this.props.params.id}</h4>
             </div>
             <div className="modal-body">
-                <div className="form-common">
+                <div className="form-common">  
                     <div className="form-rows" style={{ height: this.state.height || '409px'}}>
+                    	<div className="input-box">
+ 				        	<input type='text' value={this.props.propsValue} onChange={this.changeHandle.bind(this)} ref="input"/>
+				        	{this.props.propsValue}
+				       	</div>
                         { rows }
                     </div>
                     <div className="form-buttons clearfix">
@@ -90,4 +103,10 @@ var Form = React.createClass({
     }
 });
 
-module.exports = Form;
+function mapStateToProps(state) {
+  return {
+    propsValue: state.value
+  }
+}
+
+export default connect(mapStateToProps,action)(Form);

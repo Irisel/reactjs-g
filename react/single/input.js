@@ -1,7 +1,7 @@
-var React = require('react');
-var cx = require('/root/reactjs/webpack/node_modules/classnames') ;
+import React from '/usr/local/lib/node_modules/react';
+import cx from '/root/reactjs/webpack/node_modules/classnames';
 
-var Input = React.createClass({
+const Input = React.createClass({
     getInitialState: function() {
       return {value: this.props.value, invalid: false, validate: this.props.validate, invalid_info: this.props.invalid_info, name: this.props.name};
     },
